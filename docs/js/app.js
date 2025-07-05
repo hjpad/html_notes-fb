@@ -36,7 +36,24 @@ const userEmail = document.getElementById('user-email');
 const userMenuBtn = document.getElementById('user-menu-btn');
 const userDropdown = document.getElementById('user-dropdown');
 
-// Add these functions for authentication
+const debouncedSave = debounce(saveNoteWithoutRefresh, 1000); // 1 second delay
+
+noteTitleInput.addEventListener('input', debouncedSave);
+noteContentInput.addEventListener('input', debouncedSave);
+
+function debounce(func, wait) {
+	let timeout;
+	return function executedFunction(...args) {
+		const later = () => {
+			clearTimeout(timeout);
+			func(...args);
+		};
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+	};
+}
+
+// Authentication
 function showLoginForm() {
   loginForm.style.display = 'block';
   userInfo.style.display = 'none';
@@ -74,7 +91,7 @@ function logout() {
 
 // Add event listeners for authentication
 loginBtn.addEventListener('click', () => login(emailInput.value, passwordInput.value));
-signupBtn.addEventListener('click', () => signup(emailInput.value, passwordInput.value));
+// signupBtn.addEventListener('click', () => signup(emailInput.value, passwordInput.value));
 logoutBtn.addEventListener('click', logout);
 
 function toggleUserMenu() {
@@ -311,26 +328,25 @@ function insertNoteInCorrectPosition(li, newNote) {
 }
 
 // Event listeners for automatic saving
-noteTitleInput.addEventListener('input', () => {
-    clearTimeout(saveTimeout);
-    saveTimeout = setTimeout(saveNoteWithoutRefresh, 500); // Save 500ms after last input
-});
+// noteTitleInput.addEventListener('input', () => {
+//     clearTimeout(saveTimeout);
+//     saveTimeout = setTimeout(saveNoteWithoutRefresh, 500); // Save 500ms after last input
+// });
 
-noteContentInput.addEventListener('input', () => {
-    clearTimeout(saveTimeout);
-    saveTimeout = setTimeout(saveNoteWithoutRefresh, 500); // Save 500ms after last input
-});
+// noteContentInput.addEventListener('input', () => {
+//     clearTimeout(saveTimeout);
+//     saveTimeout = setTimeout(saveNoteWithoutRefresh, 500); // Save 500ms after last input
+// });
 
 // Save a note
 function saveNoteWithoutRefresh() {
-	const user = auth.currentUser;
-	if (!user) return;
+    const user = auth.currentUser;
+    if (!user) return;
 
-    const title = noteTitleInput.value;
-    const content = noteContentInput.value;
+    const title = noteTitleInput.value.trim();
+    const content = noteContentInput.value.trim();
 
-    if (title.trim() === '' && content.trim() === '') {
-        // Don't save empty notes
+    if (title === '' && content === '') {
         return;
     }
 
@@ -344,17 +360,43 @@ function saveNoteWithoutRefresh() {
             updateNoteInList(selectedNoteId, title);
         });
     } else {
-        // Create new note
-        db.collection('users').doc(user.uid).collection('notes').add({
-            title: title,
-            content: content,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        }).then((docRef) => {
-            selectedNoteId = docRef.id;
-            addNoteToList(selectedNoteId, title);
-        });
+        // Create new note only if it doesn't exist yet
+        createNewNoteIfNotExists(title, content);
     }
+}
+
+function createNewNoteIfNotExists(title, content) {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    // Check if a note with this title already exists
+    db.collection('users').doc(user.uid).collection('notes')
+        .where('title', '==', title)
+        .get()
+        .then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                // Create new note
+                db.collection('users').doc(user.uid).collection('notes').add({
+                    title: title,
+                    content: content,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }).then((docRef) => {
+                    selectedNoteId = docRef.id;
+                    addNoteToList(selectedNoteId, title);
+                });
+            } else {
+                // Note with this title already exists, update it
+                const existingNote = querySnapshot.docs[0];
+                selectedNoteId = existingNote.id;
+                existingNote.ref.update({
+                    content: content,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => {
+                    updateNoteInList(selectedNoteId, title);
+                });
+            }
+        });
 }
 
 function updateNoteInList(noteId, newTitle) {

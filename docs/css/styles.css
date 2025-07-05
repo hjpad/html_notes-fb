@@ -149,6 +149,10 @@ body {
 	font-size: large;
 }
 
+#note-title {
+	font-weight: bold;
+}
+
 #note-content {
     height: calc(100vh - 200px);
     resize: none;
