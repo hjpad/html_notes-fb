@@ -1,0 +1,20 @@
+
+# Ignore Firebase configuration file
+/docs/js/firebaseConfig.js
+
+# Ignore node_modules directory
+node_modules/
+
+# Ignore logs
+*.log
+
+# Ignore .DS_Store files (for macOS users)
+.DS_Store
+
+# Ignore .env files (if you decide to use environment variables in the future)
+.env
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+*.swp
