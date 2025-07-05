@@ -5,33 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Firebase Note-Taking App</title>
     <link rel="stylesheet" href="css/styles.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
     <div class="container">
-		<aside class="sidebar">
-			<h2>Notes</h2>
-			<div class="sidebar-header">
-				<button id="toggle-sort-btn" class="icon-button" data-tooltip="Toggle Sort Order">
-					<i class="fas fa-sort-alpha-down"></i>
+        <aside class="sidebar">
+			<div class="header">
+				<div class="header-group">
+					<button id="new-note-btn" class="icon-button" data-tooltip="New Note">
+						<i class="fas fa-plus"></i>
+					</button>
+					<button id="toggle-sort-btn" class="icon-button" data-tooltip="Toggle Sort Order">
+						<i class="fas fa-sort-alpha-down"></i>
+					</button>
+				</div>
+				<button id="close-sidebar-btn" class="icon-button" data-tooltip="Close Sidebar">
+					<i class="fas fa-chevron-circle-left"></i>
 				</button>
-				<button id="new-note-btn" class="icon-button" data-tooltip="New Note">
-					<i class="fas fa-plus"></i>
-				</button>
+			</div>
+			<div class="search-container">
+			    <input type="text" id="search-input" placeholder="Search notes...">
+			    <button class="search-clear-btn" id="search-clear-btn">
+			        <i class="fas fa-times"></i>
+			    </button>
 			</div>
 			<ul id="note-list"></ul>
 		</aside>
-		<main class="main-content">
-			<input type="text" id="note-title" placeholder="Note Title">
-			<textarea id="note-content" placeholder="Note Content"></textarea>
-		</main>
-	</div>
+        <main class="main-content">
+            <div class="header">
+                <button id="open-sidebar-btn" class="icon-button" data-tooltip="Open Sidebar">
+                    <i class="fas fa-chevron-circle-right"></i>
+                </button>
+            </div>
+            <input type="text" id="note-title" placeholder="Note Title">
+            <textarea id="note-content" placeholder="Note Content"></textarea>
+        </main>
+    </div>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     
-	<script src="js/firebaseConfig.js"></script>
+    <script src="js/firebaseConfig.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

@@ -1,40 +1,63 @@
+
 body {
-	font-family: Arial, sans-serif;
-	margin: 0;
-	padding: 0;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
-	display: flex;
-	height: 100vh;
+    display: flex;
+    height: 100vh;
 }
 
 .sidebar {
-	width: 250px;
-	background-color: #f0f0f0;
-	padding: 20px;
-	box-sizing: border-box;
+    width: 250px;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease;
+}
+
+.sidebar.hidden {
+    width: 0;
+    overflow: hidden;
 }
 
 .main-content {
-	flex-grow: 1;
-	padding: 20px;
-	box-sizing: border-box;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+	/* padding: 0 20px; */
 }
 
-.sidebar-header {
+.header {
+    height: 50px;
+    border-bottom: 1px solid #ccc;
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: 10px;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.sidebar .header {
+    justify-content: space-between;
+    padding: 0 10px;
+}
+
+.header-group {
+    display: flex;
+    gap: 10px;
+}
+
+.main-content .header {
+    justify-content: flex-start;
 }
 
 .icon-button {
     background: none;
     border: none;
-    color: #666666;
+    color: #333;
     cursor: pointer;
-    font-size: 1.2em;
-    margin-left: 10px;
+    font-size: 1em;
     padding: 5px;
     position: relative;
 }
@@ -42,8 +65,8 @@ body {
 .icon-button:hover::after {
     content: attr(data-tooltip);
     position: absolute;
-    bottom: 100%;
-    left: 50%;
+    top: 100%;  /* Changed from bottom: 100% to top: 100% */
+    left: 120%;
     transform: translateX(-50%);
     background-color: #333;
     color: white;
@@ -51,69 +74,100 @@ body {
     border-radius: 3px;
     font-size: 0.8em;
     white-space: nowrap;
+    z-index: 1000;  /* Added to ensure the tooltip appears above other elements */
+}
+
+#open-sidebar-btn {
+    display: none;
+	font-size: 1.2em;
+}
+
+#close-sidebar-btn {
+    font-size: 1.2em;
 }
 
 #note-list {
     list-style-type: none;
     padding: 0;
-    margin-top: 10px;
-}
-
-#note-list {
-	list-style-type: none;
-	padding: 0;
-}
-
-#note-list li {
-	cursor: pointer;
-	padding: 5px 0;
-}
-
-#note-list li:hover {
-	background-color: #e0e0e0;
-}
-
-#note-title, #note-content {
-	width: 100%;
-	margin-bottom: 10px;
-}
-
-#note-content {
-	height: 300px;
-	resize: vertical;
-}
-
-button {
-	margin-right: 10px;
-}
-
-.delete-btn {
-    background: none;
-    border: none;
-    color: rgb(247, 92, 92);
-    cursor: pointer;
-    font-size: 0.8em;
-    margin-left: 10px;
-    padding: 0;
-}
-
-.delete-btn:hover {
-    color: darkred;
+    margin: 0;
+    overflow-y: auto;
+    flex-grow: 1;
+	margin-top: 10px;
 }
 
 #note-list li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 0;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;  /* Make the entire li clickable */
 }
 
-#note-list li span {
-    cursor: pointer;
-    flex-grow: 1;
+#note-list li:hover {
+    background-color: #e0e0e0;
 }
 
 #note-list li.selected {
-    background-color: #e0e0e0;
+    background-color: #d0d0d0;
     font-weight: bold;
+}
+
+#note-title, #note-content {
+    width: 100%;
+    padding: 10px;
+    margin: 0px;
+    box-sizing: border-box;
+	border: none;
+	font-size: large;
+}
+
+#note-content {
+    height: calc(100vh - 200px);
+    resize: none;
+	border: none;
+}
+
+.search-container {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+}
+
+#search-input {
+    width: calc(100% - 40px);
+    padding: 5px 30px 5px 10px;  /* Increased right padding to make room for the clear button */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.search-clear-btn {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+}
+
+.search-clear-btn:hover {
+    color: #333;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: rgb(255, 108, 108);
+    cursor: pointer;
+    font-size: 0.8em;
+    padding: 0 5px;
+}
+
+.delete-btn:hover {
+    color: #a00;
 }
