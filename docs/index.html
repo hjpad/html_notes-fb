@@ -5,21 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Firebase Note-Taking App</title>
     <link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="css/auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
 	<div id="auth-container">
-		<div id="login-form" style="display: none;">
-			<input type="email" id="email-input" placeholder="Email">
-			<input type="password" id="password-input" placeholder="Password">
-			<button id="login-btn">Login</button>
-			<button id="signup-btn">Sign Up</button>
-		</div>
-		<div id="user-info" style="display: none;">
-			<span id="user-email"></span>
-			<button id="logout-btn">Logout</button>
-		</div>
-	</div>
+        <div id="login-form" class="auth-form">
+            <h2>Welcome</h2>
+            <input type="email" id="email-input" placeholder="Email">
+            <input type="password" id="password-input" placeholder="Password">
+            <button id="login-btn" class="auth-btn">Login</button>
+            <button id="signup-btn" class="auth-btn secondary">Sign Up</button>
+        </div>
+    </div>
     <div class="container">
         <aside class="sidebar">
 			<div class="header">
@@ -48,6 +46,15 @@
                 <button id="open-sidebar-btn" class="icon-button" data-tooltip="Open Sidebar">
                     <i class="fas fa-chevron-circle-right"></i>
                 </button>
+				<div class="user-menu">
+                    <button id="user-menu-btn" class="icon-button" data-tooltip="User Menu">
+                        <i class="fas fa-user-circle"></i>
+                    </button>
+                    <div id="user-dropdown" class="dropdown-content">
+                        <span id="user-email"></span>
+                        <button id="logout-btn">Logout</button>
+                    </div>
+                </div>
             </div>
             <input type="text" id="note-title" placeholder="Note Title">
             <textarea id="note-content" placeholder="Note Content"></textarea>

@@ -89,7 +89,7 @@ body {
     position: relative;
 }
 
-.icon-button:hover::after {
+.icon-button:not(#user-menu-btn):hover::after {
     content: attr(data-tooltip);
     position: absolute;
     top: 100%;  /* Changed from bottom: 100% to top: 100% */
@@ -198,3 +198,6 @@ body {
 .delete-btn:hover {
     color: #a00;
 }
+
+
+

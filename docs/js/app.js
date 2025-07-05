@@ -32,6 +32,9 @@ const logoutBtn = document.getElementById('logout-btn');
 const emailInput = document.getElementById('email-input');
 const passwordInput = document.getElementById('password-input');
 const userEmail = document.getElementById('user-email');
+// user menu
+const userMenuBtn = document.getElementById('user-menu-btn');
+const userDropdown = document.getElementById('user-dropdown');
 
 // Add these functions for authentication
 function showLoginForm() {
@@ -74,19 +77,49 @@ loginBtn.addEventListener('click', () => login(emailInput.value, passwordInput.v
 signupBtn.addEventListener('click', () => signup(emailInput.value, passwordInput.value));
 logoutBtn.addEventListener('click', logout);
 
-// Listen for authentication state changes
+function toggleUserMenu() {
+    userDropdown.style.display = userDropdown.style.display === 'block' ? 'none' : 'block';
+}
+
+// Add this event listener
+userMenuBtn.addEventListener('click', toggleUserMenu);
+
+// Close the dropdown if the user clicks outside of it
+window.addEventListener('click', function(event) {
+    if (!event.target.matches('#user-menu-btn') && !event.target.matches('.fa-user-circle')) {
+        if (userDropdown.style.display === 'block') {
+            userDropdown.style.display = 'none';
+        }
+    }
+});
+
+// Modify the showUserInfo function
+
+function showUserInfo(user) {
+    document.getElementById('auth-container').style.display = 'none';
+    loginForm.style.display = 'none';
+    container.style.display = 'flex';
+    userEmail.textContent = user.email;
+    userMenuBtn.style.display = 'block';
+}
+
+// Modify the auth.onAuthStateChanged function
+
 auth.onAuthStateChanged((user) => {
-	console.log("Current user:", user ? user.uid : "No user signed in");
-	if (user) {
-		showUserInfo(user);
-		loadNotes(); // Load notes when user is authenticated
-	} else {
-		showLoginForm();
-		allNotes = []; // Clear notes when user logs out
-		noteList.innerHTML = '';
-		noteTitleInput.value = '';
-		noteContentInput.value = '';
-	}
+    console.log("Current user:", user ? user.uid : "No user signed in");
+    if (user) {
+        showUserInfo(user);
+        loadNotes();
+    } else {
+        document.getElementById('auth-container').style.display = 'flex';
+        loginForm.style.display = 'block';
+        container.style.display = 'none';
+        userMenuBtn.style.display = 'none';
+        allNotes = [];
+        noteList.innerHTML = '';
+        noteTitleInput.value = '';
+        noteContentInput.value = '';
+    }
 });
 
 closeSidebarBtn.addEventListener('click', () => {

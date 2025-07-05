@@ -2,6 +2,9 @@
 
 This is a simple note-taking application using Firebase as a backend.
 
+https://hjpad.github.io/html_notes-fb/
+
+
 ## Setup
 
 1. Clone this repository:
