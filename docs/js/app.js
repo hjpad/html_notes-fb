@@ -21,7 +21,7 @@ const closeSidebarBtn = document.getElementById('close-sidebar-btn');
 const openSidebarBtn = document.getElementById('open-sidebar-btn');
 const searchInput = document.getElementById('search-input');
 const searchClearBtn = document.getElementById('search-clear-btn');
-
+const container = document.querySelector('.container');
 
 closeSidebarBtn.addEventListener('click', () => {
     sidebar.classList.add('hidden');
@@ -32,6 +32,32 @@ openSidebarBtn.addEventListener('click', () => {
     sidebar.classList.remove('hidden');
     openSidebarBtn.style.display = 'none';
 });
+
+window.addEventListener('load', checkSidebarState);
+window.addEventListener('resize', checkSidebarState);
+
+function checkSidebarState() {
+    if (window.innerWidth <= 768) {
+        sidebar.classList.add('hidden');
+        openSidebarBtn.style.display = 'block';
+    } else {
+        sidebar.classList.remove('hidden');
+        openSidebarBtn.style.display = 'none';
+    }
+}
+
+noteTitleInput.addEventListener('click', closeSidebarAutomatic)
+noteContentInput.addEventListener('click', closeSidebarAutomatic)
+
+function closeSidebarAutomatic() {
+    // if (window.innerWidth <= 768 && sidebar.classList.contains('hidden')) {
+	if (window.innerWidth <= 768 && !sidebar.classList.contains('hidden')) {
+        sidebar.classList.add('hidden');
+        openSidebarBtn.style.display = 'block';
+    }
+	else {
+    }
+};
 
 
 // Load notes
