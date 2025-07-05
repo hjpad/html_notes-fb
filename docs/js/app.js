@@ -145,18 +145,17 @@ function checkSidebarState() {
     }
 }
 
-noteTitleInput.addEventListener('click', closeSidebarAutomatic)
-noteContentInput.addEventListener('click', closeSidebarAutomatic)
+// noteTitleInput.addEventListener('click', closeSidebarAutomatic)
+// noteContentInput.addEventListener('click', closeSidebarAutomatic)
 
-function closeSidebarAutomatic() {
-    // if (window.innerWidth <= 768 && sidebar.classList.contains('hidden')) {
-	if (window.innerWidth <= 768 && !sidebar.classList.contains('hidden')) {
-        sidebar.classList.add('hidden');
-        openSidebarBtn.style.display = 'block';
-    }
-	else {
-    }
-};
+// function closeSidebarAutomatic() {
+// 	if (window.innerWidth <= 768 && !sidebar.classList.contains('hidden')) {
+//         sidebar.classList.add('hidden');
+//         openSidebarBtn.style.display = 'block';
+//     }
+// 	else {
+//     }
+// };
 
 function loadNotes(noteIdToSelect = null) {
     const user = auth.currentUser;
