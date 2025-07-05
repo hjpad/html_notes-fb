@@ -22,6 +22,72 @@ const openSidebarBtn = document.getElementById('open-sidebar-btn');
 const searchInput = document.getElementById('search-input');
 const searchClearBtn = document.getElementById('search-clear-btn');
 const container = document.querySelector('.container');
+// Auth vars
+const auth = firebase.auth();
+const loginForm = document.getElementById('login-form');
+const userInfo = document.getElementById('user-info');
+const loginBtn = document.getElementById('login-btn');
+const signupBtn = document.getElementById('signup-btn');
+const logoutBtn = document.getElementById('logout-btn');
+const emailInput = document.getElementById('email-input');
+const passwordInput = document.getElementById('password-input');
+const userEmail = document.getElementById('user-email');
+
+// Add these functions for authentication
+function showLoginForm() {
+  loginForm.style.display = 'block';
+  userInfo.style.display = 'none';
+  container.style.display = 'none';
+}
+
+function showUserInfo(user) {
+  loginForm.style.display = 'none';
+  userInfo.style.display = 'block';
+  container.style.display = 'flex';
+  userEmail.textContent = user.email;
+}
+
+function login(email, password) {
+  auth.signInWithEmailAndPassword(email, password)
+    .catch((error) => {
+      console.error("Error logging in: ", error);
+      alert("Login failed. Please check your credentials.");
+    });
+}
+
+function signup(email, password) {
+  auth.createUserWithEmailAndPassword(email, password)
+    .catch((error) => {
+      console.error("Error signing up: ", error);
+      alert("Signup failed. " + error.message);
+    });
+}
+
+function logout() {
+  auth.signOut().catch((error) => {
+    console.error("Error logging out: ", error);
+  });
+}
+
+// Add event listeners for authentication
+loginBtn.addEventListener('click', () => login(emailInput.value, passwordInput.value));
+signupBtn.addEventListener('click', () => signup(emailInput.value, passwordInput.value));
+logoutBtn.addEventListener('click', logout);
+
+// Listen for authentication state changes
+auth.onAuthStateChanged((user) => {
+	console.log("Current user:", user ? user.uid : "No user signed in");
+	if (user) {
+		showUserInfo(user);
+		loadNotes(); // Load notes when user is authenticated
+	} else {
+		showLoginForm();
+		allNotes = []; // Clear notes when user logs out
+		noteList.innerHTML = '';
+		noteTitleInput.value = '';
+		noteContentInput.value = '';
+	}
+});
 
 closeSidebarBtn.addEventListener('click', () => {
     sidebar.classList.add('hidden');
@@ -59,60 +125,11 @@ function closeSidebarAutomatic() {
     }
 };
 
-
-// Load notes
-// function loadNotes() {
-//     noteList.innerHTML = '';
-//     let query = db.collection('notes');
-    
-//     if (isAlphabeticalSort) {
-//         query = query.orderBy('title');
-//     } else {
-//         query = query.orderBy('updatedAt', 'desc');
-//     }
-    
-//     query.get()
-//         .then((snapshot) => {
-//             let mostRecentNoteId = null;
-//             snapshot.forEach((doc) => {
-//                 const note = doc.data();
-//                 const li = document.createElement('li');
-                
-//                 const titleSpan = document.createElement('span');
-//                 titleSpan.textContent = note.title;
-//                 li.appendChild(titleSpan);
-
-//                 const deleteBtn = document.createElement('button');
-//                 deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
-//                 deleteBtn.className = 'delete-btn';
-//                 deleteBtn.addEventListener('click', (e) => {
-//                     e.stopPropagation();
-//                     confirmDelete(doc.id, note.title);
-//                 });
-//                 li.appendChild(deleteBtn);
-
-//                 li.addEventListener('click', () => selectNote(doc.id));
-//                 noteList.appendChild(li);
-
-//                 if (!mostRecentNoteId) {
-//                     mostRecentNoteId = doc.id;
-//                 }
-//             });
-
-//             if (mostRecentNoteId) {
-//                 selectNote(mostRecentNoteId);
-//             } else {
-//                 createNewNote();
-//             }
-//         })
-//         .catch((error) => {
-//             console.error("Error loading notes: ", error);
-//         });
-// }
-
-
 function loadNotes(noteIdToSelect = null) {
-    let query = db.collection('notes');
+    const user = auth.currentUser;
+	if (!user) return;
+
+	let query = db.collection('users').doc(user.uid).collection('notes');
     
     if (isAlphabeticalSort) {
         query = query.orderBy('title');
@@ -169,8 +186,11 @@ function loadNotes(noteIdToSelect = null) {
 
 // Select a note
 function selectNote(noteId) {
+	const user = auth.currentUser;
+  	if (!user) return;
+
     selectedNoteId = noteId;
-    db.collection('notes').doc(noteId).get().then((doc) => {
+    db.collection('users').doc(user.uid).collection('notes').doc(noteId).get().then((doc) => {
         const note = doc.data();
         noteTitleInput.value = note.title;
         noteContentInput.value = note.content;
@@ -270,40 +290,10 @@ noteContentInput.addEventListener('input', () => {
 });
 
 // Save a note
-
-// function saveNote() {
-//     const title = noteTitleInput.value;
-//     const content = noteContentInput.value;
-
-//     if (title.trim() === '' && content.trim() === '') {
-//         // Don't save empty notes
-//         return;
-//     }
-
-//     if (selectedNoteId) {
-//         // Update existing note
-//         db.collection('notes').doc(selectedNoteId).update({
-//             title: title,
-//             content: content,
-//             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-//         }).then(() => {
-//             loadNotes(selectedNoteId);  // Pass the current note ID
-//         });
-//     } else {
-//         // Create new note
-//         db.collection('notes').add({
-//             title: title,
-//             content: content,
-//             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-//             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-//         }).then((docRef) => {
-//             selectedNoteId = docRef.id;
-//             loadNotes(selectedNoteId);  // Pass the new note ID
-//         });
-//     }
-// }
-
 function saveNoteWithoutRefresh() {
+	const user = auth.currentUser;
+	if (!user) return;
+
     const title = noteTitleInput.value;
     const content = noteContentInput.value;
 
@@ -314,7 +304,7 @@ function saveNoteWithoutRefresh() {
 
     if (selectedNoteId) {
         // Update existing note
-        db.collection('notes').doc(selectedNoteId).update({
+        db.collection('users').doc(user.uid).collection('notes').doc(selectedNoteId).update({
             title: title,
             content: content,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -323,7 +313,7 @@ function saveNoteWithoutRefresh() {
         });
     } else {
         // Create new note
-        db.collection('notes').add({
+        db.collection('users').doc(user.uid).collection('notes').add({
             title: title,
             content: content,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -356,8 +346,11 @@ function updateNoteInList(noteId, newTitle) {
 
 // Add a new function for delete confirmation
 function confirmDelete(noteId, noteTitle) {
+	const user = auth.currentUser;
+  	if (!user) return;
+
     if (confirm(`Are you sure you want to delete the note "${noteTitle}"?`)) {
-        db.collection('notes').doc(noteId).delete().then(() => {
+        db.collection('users').doc(user.uid).collection('notes').doc(noteId).delete().then(() => {
             if (selectedNoteId === noteId) {
                 selectedNoteId = null;
                 noteTitleInput.value = '';
@@ -372,6 +365,9 @@ function confirmDelete(noteId, noteTitle) {
 
 
 function saveNote() {
+	const user = auth.currentUser;
+  	if (!user) return;
+
 	const title = noteTitleInput.value;
 	const content = noteContentInput.value;
 
@@ -382,7 +378,7 @@ function saveNote() {
 
 	if (selectedNoteId) {
 		// Update existing note
-		db.collection('notes').doc(selectedNoteId).update({
+		db.collection('users').doc(user.uid).collection('notes').doc(selectedNoteId).update({
 			title: title,
 			content: content,
 			updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -391,7 +387,7 @@ function saveNote() {
 		});
 	} else {
 		// Create new note
-		db.collection('notes').add({
+		db.collection('users').doc(user.uid).collection('notes').add({
 			title: title,
 			content: content,
 			createdAt: firebase.firestore.FieldValue.serverTimestamp(),
