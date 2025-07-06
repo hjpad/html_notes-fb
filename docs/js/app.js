@@ -154,15 +154,28 @@ closeSidebarBtn.addEventListener('click', hideSidebar);
 
 
 window.addEventListener('load', checkSidebarState);
-window.addEventListener('resize', checkSidebarState);
+
+window.addEventListener('resize', () => {
+	checkSidebarState();
+	if (window.innerWidth > 768) {
+		sidebar.classList.remove('visible');
+		document.querySelector('.dark-overlay').classList.remove('visible');
+	}
+});
 
 
 
 function checkSidebarState() {
     if (window.innerWidth <= 768) {
-        sidebar.classList.remove('visible');
-        openSidebarBtn.style.display = 'block';
+        // Mobile mode
+        if (!searchInput.contains(document.activeElement)) {
+            sidebar.classList.remove('visible');
+            openSidebarBtn.style.display = 'block';
+            document.querySelector('.dark-overlay').classList.remove('visible');
+        }
     } else {
+        // Desktop mode
+        sidebar.classList.remove('visible');
         sidebar.classList.remove('hidden');
         openSidebarBtn.style.display = 'none';
         document.querySelector('.dark-overlay').classList.remove('visible');
@@ -175,15 +188,45 @@ document.querySelector('.dark-overlay').addEventListener('click', hideSidebar);
 
 function showSidebar() {
     if (window.innerWidth <= 768) {
+        // Mobile mode
         sidebar.classList.add('visible');
         document.querySelector('.dark-overlay').classList.add('visible');
+    } else {
+        // Desktop mode
+        sidebar.classList.remove('hidden');
     }
+    openSidebarBtn.style.display = 'none';
 }
 
 function hideSidebar() {
     if (window.innerWidth <= 768) {
-        sidebar.classList.remove('visible');
-        document.querySelector('.dark-overlay').classList.remove('visible');
+        // Mobile mode
+        if (!searchInput.contains(document.activeElement)) {
+            sidebar.classList.remove('visible');
+            document.querySelector('.dark-overlay').classList.remove('visible');
+            openSidebarBtn.style.display = 'block';
+        }
+    } else {
+        // Desktop mode
+        sidebar.classList.add('hidden');
+        openSidebarBtn.style.display = 'block';
+    }
+}
+
+document.addEventListener('mousedown', closeSidebarOnMobile);
+document.addEventListener('touchstart', closeSidebarOnMobile);
+
+// Prevent sidebar from closing when interacting with the search input
+searchInput.addEventListener('mousedown', (event) => {
+    event.stopPropagation();
+});
+searchInput.addEventListener('touchstart', (event) => {
+    event.stopPropagation();
+});
+
+function closeSidebarOnMobile(event) {
+    if (window.innerWidth <= 768 && !sidebar.contains(event.target) && !openSidebarBtn.contains(event.target)) {
+        hideSidebar();
     }
 }
 
