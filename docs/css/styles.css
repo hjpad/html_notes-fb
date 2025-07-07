@@ -100,7 +100,7 @@ body {
 .icon-button:not(#user-menu-btn):hover::after {
     content: attr(data-tooltip);
     position: absolute;
-    top: 100%;  /* Changed from bottom: 100% to top: 100% */
+    top: 100%;
     left: 120%;
     transform: translateX(-50%);
     background-color: #333;
@@ -109,7 +109,22 @@ body {
     border-radius: 3px;
     font-size: 0.8em;
     white-space: nowrap;
-    z-index: 1000;  /* Added to ensure the tooltip appears above other elements */
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    animation: fadeOut 3s forwards;
+}
+
+@keyframes fadeOut {
+	0% { opacity: 1; }
+	90% { opacity: 1; }
+	100% { opacity: 0; }
+}
+
+@media (max-width: 768px) {
+	.icon-button:not(#user-menu-btn):hover::after {
+		display: none;
+	}
 }
 
 #open-sidebar-btn {

@@ -228,6 +228,7 @@ function closeSidebarOnMobile(event) {
     }
 }
 
+
 // noteTitleInput.addEventListener('click', closeSidebarAutomatic)
 // noteContentInput.addEventListener('click', closeSidebarAutomatic)
 
