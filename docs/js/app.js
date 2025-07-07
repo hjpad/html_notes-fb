@@ -243,24 +243,27 @@ function closeSidebarOnMobile(event) {
 
 function loadNotes(noteIdToSelect = null) {
     const user = auth.currentUser;
-	if (!user) return;
+    if (!user) return;
 
-	let query = db.collection('users').doc(user.uid).collection('notes');
+    let query = db.collection('users').doc(user.uid).collection('notes');
     
-    if (isAlphabeticalSort) {
-        query = query.orderBy('title');
-    } else {
-        query = query.orderBy('updatedAt', 'desc');
-    }
+    // Always sort by updatedAt in descending order
+    query = query.orderBy('updatedAt', 'desc');
     
     query.get()
         .then((snapshot) => {
             allNotes = []; // Clear the allNotes array
             noteList.innerHTML = ''; // Clear the note list
+            let lastModifiedNoteId = null;
+            
             snapshot.forEach((doc) => {
                 const note = doc.data();
                 note.id = doc.id;
                 allNotes.push(note);
+                
+                if (!lastModifiedNoteId) {
+                    lastModifiedNoteId = note.id;
+                }
                 
                 const li = document.createElement('li');
                 li.setAttribute('data-id', note.id);
@@ -287,8 +290,15 @@ function loadNotes(noteIdToSelect = null) {
                 noteList.appendChild(li);
             });
 
+            // Sort the note list if needed
+            if (isAlphabeticalSort) {
+                sortNoteListAlphabetically();
+            }
+
             if (noteIdToSelect) {
                 selectNote(noteIdToSelect);
+            } else if (lastModifiedNoteId) {
+                selectNote(lastModifiedNoteId);
             } else if (allNotes.length > 0) {
                 selectNote(allNotes[0].id);
             } else {
@@ -298,6 +308,16 @@ function loadNotes(noteIdToSelect = null) {
         .catch((error) => {
             console.error("Error loading notes: ", error);
         });
+}
+
+function sortNoteListAlphabetically() {
+    const sortedNotes = Array.from(noteList.children).sort((a, b) => {
+        const titleA = a.querySelector('span').textContent.toLowerCase();
+        const titleB = b.querySelector('span').textContent.toLowerCase();
+        return titleA.localeCompare(titleB);
+    });
+    
+    sortedNotes.forEach(note => noteList.appendChild(note));
 }
 
 // Select a note
@@ -330,7 +350,11 @@ toggleSortBtn.addEventListener('click', () => {
     toggleSortBtn.innerHTML = isAlphabeticalSort 
         ? '<i class="fas fa-clock"></i>' 
         : '<i class="fas fa-sort-alpha-down"></i>';
-    loadNotes(selectedNoteId);
+    if (isAlphabeticalSort) {
+        sortNoteListAlphabetically();
+    } else {
+        loadNotes(selectedNoteId);
+    }
 });
 
 // Create a new note
