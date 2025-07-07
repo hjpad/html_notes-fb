@@ -78,25 +78,31 @@ function showUserInfo(user) {
 }
 
 function login(email, password) {
-  auth.signInWithEmailAndPassword(email, password)
-    .catch((error) => {
-      console.error("Error logging in: ", error);
-      alert("Login failed. Please check your credentials.");
-    });
+    showLoading();
+    auth.signInWithEmailAndPassword(email, password)
+        .catch((error) => {
+            console.error("Error logging in: ", error);
+            alert("Login failed. Please check your credentials.");
+            hideLoading();
+        });
 }
 
 function signup(email, password) {
-  auth.createUserWithEmailAndPassword(email, password)
-    .catch((error) => {
-      console.error("Error signing up: ", error);
-      alert("Signup failed. " + error.message);
-    });
+    showLoading();
+    auth.createUserWithEmailAndPassword(email, password)
+        .catch((error) => {
+            console.error("Error signing up: ", error);
+            alert("Signup failed. " + error.message);
+            hideLoading();
+        });
 }
 
 function logout() {
-  auth.signOut().catch((error) => {
-    console.error("Error logging out: ", error);
-  });
+    showLoading();
+    auth.signOut().catch((error) => {
+        console.error("Error logging out: ", error);
+        hideLoading();
+    });
 }
 
 // Add event listeners for authentication
@@ -133,11 +139,12 @@ function showUserInfo(user) {
 // Modify the auth.onAuthStateChanged function
 
 auth.onAuthStateChanged((user) => {
-    showLoading(); // Show loading overlay
     console.log("Current user:", user ? user.uid : "No user signed in");
     if (user) {
         showUserInfo(user);
-        loadNotes();
+        loadNotes().then(() => {
+            hideLoading();
+        });
     } else {
         document.getElementById('auth-container').style.display = 'flex';
         loginForm.style.display = 'block';
@@ -147,7 +154,7 @@ auth.onAuthStateChanged((user) => {
         noteList.innerHTML = '';
         noteTitleInput.value = '';
         noteContentInput.value = '';
-        hideLoading(); // Hide loading overlay
+        hideLoading();
     }
 });
 
@@ -255,7 +262,7 @@ function closeSidebarOnMobile(event) {
 
 function loadNotes(noteIdToSelect = null) {
     const user = auth.currentUser;
-    if (!user) return;
+    if (!user) return Promise.resolve();
 
 	showLoading(); // Show loading overlay
 
@@ -651,3 +658,7 @@ searchClearBtn.style.display = 'none';  // Hide the button initially
 
 // Load notes on page load
 loadNotes();
+
+document.addEventListener('DOMContentLoaded', () => {
+	showLoading();
+});
