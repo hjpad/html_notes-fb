@@ -38,6 +38,16 @@ const userDropdown = document.getElementById('user-dropdown');
 
 const debouncedSave = debounce(saveNoteWithoutRefresh, 1000); // 1 second delay
 
+const loadingOverlay = document.getElementById('loading-overlay');
+
+function showLoading() {
+	loadingOverlay.style.display = 'flex';
+}
+
+function hideLoading() {
+	loadingOverlay.style.display = 'none';
+}
+
 noteTitleInput.addEventListener('input', debouncedSave);
 noteContentInput.addEventListener('input', debouncedSave);
 
@@ -123,6 +133,7 @@ function showUserInfo(user) {
 // Modify the auth.onAuthStateChanged function
 
 auth.onAuthStateChanged((user) => {
+    showLoading(); // Show loading overlay
     console.log("Current user:", user ? user.uid : "No user signed in");
     if (user) {
         showUserInfo(user);
@@ -136,6 +147,7 @@ auth.onAuthStateChanged((user) => {
         noteList.innerHTML = '';
         noteTitleInput.value = '';
         noteContentInput.value = '';
+        hideLoading(); // Hide loading overlay
     }
 });
 
@@ -245,6 +257,8 @@ function loadNotes(noteIdToSelect = null) {
     const user = auth.currentUser;
     if (!user) return;
 
+	showLoading(); // Show loading overlay
+
     let query = db.collection('users').doc(user.uid).collection('notes');
     
     // Always sort by updatedAt in descending order
@@ -307,6 +321,9 @@ function loadNotes(noteIdToSelect = null) {
         })
         .catch((error) => {
             console.error("Error loading notes: ", error);
+        })
+		.finally(() => {
+            hideLoading(); // Hide loading overlay
         });
 }
 
@@ -455,7 +472,10 @@ function saveNoteWithoutRefresh() {
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
             updateNoteInList(selectedNoteId, title);
-        });
+        })
+		.finally(() => {
+			hideLoading();
+		});
     } else {
         // Create new note only if it doesn't exist yet
         createNewNoteIfNotExists(title, content);
@@ -493,7 +513,10 @@ function createNewNoteIfNotExists(title, content) {
                     updateNoteInList(selectedNoteId, title);
                 });
             }
-        });
+        })
+		.finally(() => {
+			hideLoading();
+		});
 }
 
 function updateNoteInList(noteId, newTitle) {
@@ -530,7 +553,10 @@ function confirmDelete(noteId, noteTitle) {
             loadNotes(selectedNoteId);
         }).catch((error) => {
             console.error("Error deleting note: ", error);
-        });
+        })
+		.finally(() => {
+			hideLoading();
+		});
     }
 }
 
