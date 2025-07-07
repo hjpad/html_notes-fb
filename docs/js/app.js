@@ -201,11 +201,9 @@ function showSidebar() {
 function hideSidebar() {
     if (window.innerWidth <= 768) {
         // Mobile mode
-        if (!searchInput.contains(document.activeElement)) {
-            sidebar.classList.remove('visible');
-            document.querySelector('.dark-overlay').classList.remove('visible');
-            openSidebarBtn.style.display = 'block';
-        }
+        sidebar.classList.remove('visible');
+        document.querySelector('.dark-overlay').classList.remove('visible');
+        openSidebarBtn.style.display = 'block';
     } else {
         // Desktop mode
         sidebar.classList.add('hidden');
@@ -302,9 +300,10 @@ function loadNotes(noteIdToSelect = null) {
 }
 
 // Select a note
+// Select a note
 function selectNote(noteId) {
-	const user = auth.currentUser;
-  	if (!user) return;
+    const user = auth.currentUser;
+    if (!user) return;
 
     selectedNoteId = noteId;
     db.collection('users').doc(user.uid).collection('notes').doc(noteId).get().then((doc) => {
@@ -316,6 +315,11 @@ function selectNote(noteId) {
         document.querySelectorAll('#note-list li').forEach(li => li.classList.remove('selected'));
         const selectedLi = document.querySelector(`#note-list li[data-id="${noteId}"]`);
         if (selectedLi) selectedLi.classList.add('selected');
+
+        // Close sidebar in mobile mode
+        if (window.innerWidth <= 768) {
+            hideSidebar();
+        }
     });
 }
 
