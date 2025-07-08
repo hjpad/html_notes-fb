@@ -382,14 +382,26 @@ toggleSortBtn.addEventListener('click', () => {
 });
 
 // Create a new note
+// Create a new note
 function createNewNote() {
     selectedNoteId = null;
     noteTitleInput.value = '';
     noteContentInput.value = '';
     saveNote(); // Create a new note immediately
+
+    // Close sidebar in mobile mode
+    if (window.innerWidth <= 768) {
+        hideSidebar();
+    }
 }
 
-newNoteBtn.addEventListener('click', createNewNote);
+newNoteBtn.addEventListener('click', () => {
+    createNewNote();
+    // Close sidebar in mobile mode
+    if (window.innerWidth <= 768) {
+        hideSidebar();
+    }
+});
 
 // Function to add a new note to the list without full refresh
 function addNoteToList(noteId, title) {
