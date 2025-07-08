@@ -142,7 +142,9 @@ auth.onAuthStateChanged((user) => {
     console.log("Current user:", user ? user.uid : "No user signed in");
     if (user) {
         showUserInfo(user);
-        loadNotes().then(() => {
+        Promise.resolve().then(() => {
+            return loadNotes();
+        }).then(() => {
             hideLoading();
         });
     } else {
@@ -669,7 +671,12 @@ searchInput.addEventListener('input', () => {
 searchClearBtn.style.display = 'none';  // Hide the button initially
 
 // Load notes on page load
-loadNotes();
+// Initialize the app when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    showLoading();
+    // Firebase will automatically trigger the auth state change
+    // which will then load the notes if a user is logged in
+});
 
 document.addEventListener('DOMContentLoaded', () => {
 	showLoading();
