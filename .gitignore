@@ -2,6 +2,8 @@
 # Ignore Firebase configuration file
 # /docs/js/firebaseConfig.js
 
+lab/
+
 # Ignore node_modules directory
 node_modules/
 
