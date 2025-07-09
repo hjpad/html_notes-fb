@@ -1,6 +1,6 @@
-# Firebase Notes App
+# html_notes-fb
 
-This is a simple note-taking application using Firebase as a backend.
+A simple note-taking application based on a static webpage as frontend  and Firebase as a backend.
 
 https://hjpad.github.io/html_notes-fb/
 
