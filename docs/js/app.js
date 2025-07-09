@@ -40,6 +40,16 @@ const debouncedSave = debounce(saveNoteWithoutRefresh, 1000); // 1 second delay
 
 const loadingOverlay = document.getElementById('loading-overlay');
 
+document.addEventListener('DOMContentLoaded', function() {
+	var inputs = document.querySelectorAll('input, textarea');
+	inputs.forEach(function(input) {
+		input.addEventListener('focus', function() {
+			window.scrollTo(0, 0);
+			document.body.scrollTop = 0;
+		});
+	});
+});
+
 function showLoading() {
 	loadingOverlay.style.display = 'flex';
 }
