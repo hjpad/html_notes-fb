@@ -133,7 +133,7 @@ body {
 /* Note Editor Styles */
 .editor-container {
     height: calc(100vh - 56px);
-    overflow: none;
+    overflow: auto;
 }
 
 #note-title, #note-content {
@@ -150,9 +150,9 @@ body {
 }
 
 #note-content {
-    height: calc(100vh - 96px);
-
-    overflow: auto;
+    height: calc(100vh - 56px);
+    resize: none;
+    /* overflow: auto; */
 }
 
 /* Search Styles */
