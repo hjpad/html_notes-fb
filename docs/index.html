@@ -16,8 +16,8 @@
 
     <link rel="manifest" href="site.webmanifest">
 
-    <link rel="stylesheet" href="css/styles.css">
-	<link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="styles/styles.css">
+	<link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 	<script defer src="https://umami.hjpad.app/script.js" data-website-id="c4e17cd0-24a1-4eab-9f7f-27a59a6dae64"></script>
@@ -32,31 +32,43 @@
             <!-- <button id="signup-btn" class="auth-btn secondary">Sign Up</button> -->
         </div>
     </div>
-    <div class="container">
-        <aside class="sidebar">
-			<div class="header">
+    <div class="main-container">
+        <aside class="main-sidebar">
+			<div class="main-header">
 				<div class="header-group">
-					<button id="new-note-btn" class="icon-button" data-tooltip="New Note">
-						<i class="fas fa-plus"></i>
+					<button id="note-list-btn" class="icon-button" data-tooltip="Notes">
+						<i class="fas fa-folder"></i>
 					</button>
-					<button id="toggle-sort-btn" class="icon-button" data-tooltip="Toggle Sort Order">
-						<i class="fas fa-sort-alpha-down"></i>
+					<button id="favourite-list-btn" class="icon-button" data-tooltip="Favourites">
+						<i class="fas fa-star"></i>
 					</button>
 				</div>
 				<button id="close-sidebar-btn" class="icon-button" data-tooltip="Close Sidebar">
 					<i class="fas fa-chevron-circle-left"></i>
 				</button>
 			</div>
-			<div class="search-container">
+			<div class="main-search">
 			    <input type="text" id="search-input" placeholder="Search notes...">
 			    <button class="search-clear-btn" id="search-clear-btn">
 			        <i class="fas fa-times"></i>
 			    </button>
 			</div>
-			<ul id="note-list"></ul>
+			<div class="main-list">
+				<div class="list-container">
+					<div class="list-header">
+						<button id="toggle-sort-btn" class="icon-button" data-tooltip="Toggle Sort Order">
+							<i class="fas fa-sort-alpha-down"></i>
+						</button>
+						<button id="new-note-btn" class="icon-button" data-tooltip="New Note">
+							<i class="fas fa-plus"></i>
+						</button>
+					</div>
+					<ul id="note-list"></ul>
+				</div>
+			</div>
 		</aside>
         <main class="main-content">
-            <div class="header">
+            <div class="main-header">
                 <button id="open-sidebar-btn" class="icon-button" data-tooltip="Open Sidebar">
                     <i class="fas fa-chevron-circle-right"></i>
                 </button>
@@ -88,7 +100,7 @@
 	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
     
-    <script src="js/firebaseConfig.js"></script>
-    <script src="js/app.js"></script>
+    <script src="scripts/firebaseConfig.js"></script>
+    <script src="scripts/app.js"></script>
 </body>
 </html>
