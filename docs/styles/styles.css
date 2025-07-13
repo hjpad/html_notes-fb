@@ -131,6 +131,11 @@ body {
 }
 
 /* Note Editor Styles */
+.editor-container {
+    height: calc(100vh - 56px);
+    overflow: none;
+}
+
 #note-title, #note-content {
     width: 100%;
     padding: 10px;
@@ -145,8 +150,9 @@ body {
 }
 
 #note-content {
-    height: calc(100vh - 200px);
-    resize: none;
+    height: calc(100vh - 96px);
+
+    overflow: auto;
 }
 
 /* Search Styles */
