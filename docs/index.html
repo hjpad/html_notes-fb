@@ -53,16 +53,16 @@
 			        <i class="fas fa-times"></i>
 			    </button>
 			</div>
-			<div class="main-list">
-				<div class="list-container">
-					<div class="list-header">
-						<button id="toggle-sort-btn" class="icon-button" data-tooltip="Toggle Sort Order">
-							<i class="fas fa-sort-alpha-down"></i>
-						</button>
-						<button id="new-note-btn" class="icon-button" data-tooltip="New Note">
-							<i class="fas fa-plus"></i>
-						</button>
-					</div>
+			<div class="list-container">
+				<div class="list-header">
+					<button id="toggle-sort-btn" class="icon-button" data-tooltip="Toggle Sort Order">
+						<i class="fas fa-sort-alpha-down"></i>
+					</button>
+					<button id="new-note-btn" class="icon-button" data-tooltip="New Note">
+						<i class="fas fa-plus"></i>
+					</button>
+				</div>
+				<div class="list-body">
 					<ul id="note-list"></ul>
 				</div>
 			</div>
@@ -82,8 +82,10 @@
                     </div>
                 </div>
             </div>
-            <input type="text" id="note-title" placeholder="Note Title">
-            <textarea id="note-content" placeholder="Note Content"></textarea>
+			<div class="editor-container">
+				<input type="text" id="note-title" placeholder="Note Title">
+            	<textarea id="note-content" placeholder="Note Content"></textarea>
+			</div>
         </main>
     </div>
 
