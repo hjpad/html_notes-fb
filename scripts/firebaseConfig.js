@@ -5,4 +5,3 @@ const firebaseConfig = {
 	storageBucket: html-notes-fb.firebasestorage.app,
 	messagingSenderId: 807374533740,
 	appId: 1:807374533740:web:f840bfcb623149dc7fd449
-};
