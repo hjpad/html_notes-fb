@@ -1,14 +1,13 @@
-
-// Firebase initialization
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID
+  apiKey: "AIzaSyA5C_arWOof0iA4LWOrnNTICurTWG__cX0",
+  authDomain: ""html-notes-fb.firebaseapp.com"",
+  projectId: "html-notes-fb",
+  storageBucket: "html-notes-fb.firebasestorage.app",
+  messagingSenderId: "807374533740",
+  appId: "1:807374533740:web:f840bfcb623149dc7fd449"
 };
 
+// Firebase initialization
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
