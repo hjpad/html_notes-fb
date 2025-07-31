@@ -1,8 +1,16 @@
 
-// Firebase initialization
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
+document.addEventListener('DOMContentLoaded', (event) => {
+    if (typeof firebaseConfig !== 'undefined' && firebase) {
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        
+        // Call your main initialization function here
+        initializeApp();
+    } else {
+        console.error('Firebase configuration or SDK not loaded');
+    }
+});
 
 // DOM elements
 const noteList = document.getElementById('note-list');
@@ -78,6 +86,8 @@ function initializeApp() {
             showLoginForm();
         }
     });
+    noteTitleInput.addEventListener('input', debouncedSave);
+    noteContentInput.addEventListener('input', debouncedSave);
 }
 
 // Authentication functions
