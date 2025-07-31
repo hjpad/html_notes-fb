@@ -1,12 +1,6 @@
 
 // Firebase initialization
-const firebaseConfig = window.firebaseConfig;
-
 firebase.initializeApp(firebaseConfig);
-// Initialize App Check
-const appCheck = firebase.appCheck();
-appCheck.activate('YOUR_RECAPTCHA_SITE_KEY', true);
-// Initialise Firestore Database and Authentication
 const db = firebase.firestore();
 const auth = firebase.auth();
 
