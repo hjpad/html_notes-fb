@@ -3,13 +3,23 @@
 let db, auth;
 
 function initializeFirebase() {
-    if (typeof window.firebaseConfig !== 'undefined' && firebase) {
+    console.log('Initializing Firebase...');
+    if (typeof window.firebaseConfig === 'undefined') {
+        console.error('Firebase configuration is not defined');
+        return false;
+    }
+    if (typeof firebase === 'undefined') {
+        console.error('Firebase SDK is not loaded');
+        return false;
+    }
+    try {
         firebase.initializeApp(window.firebaseConfig);
         db = firebase.firestore();
         auth = firebase.auth();
+        console.log('Firebase initialized successfully');
         return true;
-    } else {
-        console.error('Firebase configuration or SDK not loaded');
+    } catch (error) {
+        console.error('Error initializing Firebase:', error);
         return false;
     }
 }
@@ -58,38 +68,80 @@ const debouncedSave = debounce(saveNoteWithoutRefresh, 1000);
 
 // Event listeners
 document.addEventListener('DOMContentLoaded', initializeApp);
-noteTitleInput.addEventListener('input', debouncedSave);
-noteContentInput.addEventListener('input', debouncedSave);
-loginBtn.addEventListener('click', () => login(emailInput.value, passwordInput.value));
-logoutBtn.addEventListener('click', logout);
-userMenuBtn.addEventListener('click', toggleUserMenu);
-window.addEventListener('click', closeUserMenuOutside);
-openSidebarBtn.addEventListener('click', showSidebar);
-closeSidebarBtn.addEventListener('click', hideSidebar);
-window.addEventListener('load', checkSidebarState);
-window.addEventListener('resize', checkSidebarState);
-document.querySelector('.dark-overlay').addEventListener('click', hideSidebar);
-document.addEventListener('mousedown', closeSidebarOnMobile);
-document.addEventListener('touchstart', closeSidebarOnMobile);
-searchInput.addEventListener('mousedown', (event) => event.stopPropagation());
-searchInput.addEventListener('touchstart', (event) => event.stopPropagation());
-toggleSortBtn.addEventListener('click', toggleSortOrder);
-newNoteBtn.addEventListener('click', createNewNote);
-searchInput.addEventListener('input', handleSearchInput);
-searchClearBtn.addEventListener('click', clearSearch);
+// noteTitleInput.addEventListener('input', debouncedSave);
+// noteContentInput.addEventListener('input', debouncedSave);
+// loginBtn.addEventListener('click', () => login(emailInput.value, passwordInput.value));
+// logoutBtn.addEventListener('click', logout);
+// userMenuBtn.addEventListener('click', toggleUserMenu);
+// window.addEventListener('click', closeUserMenuOutside);
+// openSidebarBtn.addEventListener('click', showSidebar);
+// closeSidebarBtn.addEventListener('click', hideSidebar);
+// window.addEventListener('load', checkSidebarState);
+// window.addEventListener('resize', checkSidebarState);
+// document.querySelector('.dark-overlay').addEventListener('click', hideSidebar);
+// document.addEventListener('mousedown', closeSidebarOnMobile);
+// document.addEventListener('touchstart', closeSidebarOnMobile);
+// searchInput.addEventListener('mousedown', (event) => event.stopPropagation());
+// searchInput.addEventListener('touchstart', (event) => event.stopPropagation());
+// toggleSortBtn.addEventListener('click', toggleSortOrder);
+// newNoteBtn.addEventListener('click', createNewNote);
+// searchInput.addEventListener('input', handleSearchInput);
+// searchClearBtn.addEventListener('click', clearSearch);
 
 // Initialize the app
 function initializeApp() {
-    initializeFirebase();
+    console.log('Initializing app...');
+    let retries = 0;
+    const maxRetries = 5;
 
-    auth.onAuthStateChanged((user) => {
-        if (user) {
-            showUserInfo(user);
-            loadNotes();
+    function tryInitialize() {
+        if (initializeFirebase()) {
+            console.log('Firebase initialized, setting up auth state listener');
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    showUserInfo(user);
+                    loadNotes();
+                } else {
+                    showLoginForm();
+                }
+            });
+
+            // Set up your event listeners here
+            setupEventListeners();
         } else {
-            showLoginForm();
+            retries++;
+            if (retries < maxRetries) {
+                console.log(`Retrying Firebase initialization (${retries}/${maxRetries})...`);
+                setTimeout(tryInitialize, 1000);
+            } else {
+                console.error('Failed to initialize Firebase after multiple attempts. App initialization aborted.');
+            }
         }
-    });
+    }
+
+    tryInitialize();
+}
+
+function setupEventListeners() {
+    noteTitleInput.addEventListener('input', debouncedSave);
+    noteContentInput.addEventListener('input', debouncedSave);
+    loginBtn.addEventListener('click', () => login(emailInput.value, passwordInput.value));
+    logoutBtn.addEventListener('click', logout);
+    userMenuBtn.addEventListener('click', toggleUserMenu);
+    window.addEventListener('click', closeUserMenuOutside);
+    openSidebarBtn.addEventListener('click', showSidebar);
+    closeSidebarBtn.addEventListener('click', hideSidebar);
+    window.addEventListener('load', checkSidebarState);
+    window.addEventListener('resize', checkSidebarState);
+    document.querySelector('.dark-overlay').addEventListener('click', hideSidebar);
+    document.addEventListener('mousedown', closeSidebarOnMobile);
+    document.addEventListener('touchstart', closeSidebarOnMobile);
+    searchInput.addEventListener('mousedown', (event) => event.stopPropagation());
+    searchInput.addEventListener('touchstart', (event) => event.stopPropagation());
+    toggleSortBtn.addEventListener('click', toggleSortOrder);
+    newNoteBtn.addEventListener('click', createNewNote);
+    searchInput.addEventListener('input', handleSearchInput);
+    searchClearBtn.addEventListener('click', clearSearch);
 }
 
 // Authentication functions
