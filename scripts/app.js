@@ -1,38 +1,77 @@
+// Firebase initialization
+let db, auth;
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    if (typeof firebaseConfig !== 'undefined' && firebase) {
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-        
-        // Call your main initialization function here
-        initializeApp();
+function initializeFirebase() {
+    if (typeof window.firebaseConfig !== 'undefined' && firebase) {
+        firebase.initializeApp(window.firebaseConfig);
+        db = firebase.firestore();
+        auth = firebase.auth();
+        return true;
     } else {
         console.error('Firebase configuration or SDK not loaded');
+        return false;
     }
-});
+}
 
-// DOM elements
-const noteList = document.getElementById('note-list');
-const newNoteBtn = document.getElementById('new-note-btn');
-const noteTitleInput = document.getElementById('note-title');
-const noteContentInput = document.getElementById('note-content');
-const toggleSortBtn = document.getElementById('toggle-sort-btn');
-const sidebar = document.querySelector('.sidebar');
-const closeSidebarBtn = document.getElementById('close-sidebar-btn');
-const openSidebarBtn = document.getElementById('open-sidebar-btn');
-const darkOverlay = document.querySelector('.dark-overlay');
-const searchInput = document.getElementById('search-input');
-const searchClearBtn = document.getElementById('search-clear-btn');
-const loginForm = document.getElementById('login-form');
-const loginBtn = document.getElementById('login-btn');
-const logoutBtn = document.getElementById('logout-btn');
-const emailInput = document.getElementById('email-input');
-const passwordInput = document.getElementById('password-input');
-const userEmail = document.getElementById('user-email');
-const userMenuBtn = document.getElementById('user-menu-btn');
-const userDropdown = document.getElementById('user-dropdown');
-const loadingOverlay = document.getElementById('loading-overlay');
+// Main initialization function
+function initializeApp() {
+    if (!initializeFirebase()) {
+        return;
+    }
+
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            showUserInfo(user);
+            loadNotes();
+        } else {
+            showLoginForm();
+        }
+    });
+    
+    // DOM elements
+    const noteList = document.getElementById('note-list');
+    const newNoteBtn = document.getElementById('new-note-btn');
+    const noteTitleInput = document.getElementById('note-title');
+    const noteContentInput = document.getElementById('note-content');
+    const toggleSortBtn = document.getElementById('toggle-sort-btn');
+    const sidebar = document.querySelector('.sidebar');
+    const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+    const openSidebarBtn = document.getElementById('open-sidebar-btn');
+    const darkOverlay = document.querySelector('.dark-overlay');
+    const searchInput = document.getElementById('search-input');
+    const searchClearBtn = document.getElementById('search-clear-btn');
+    const loginForm = document.getElementById('login-form');
+    const loginBtn = document.getElementById('login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const emailInput = document.getElementById('email-input');
+    const passwordInput = document.getElementById('password-input');
+    const userEmail = document.getElementById('user-email');
+    const userMenuBtn = document.getElementById('user-menu-btn');
+    const userDropdown = document.getElementById('user-dropdown');
+    const loadingOverlay = document.getElementById('loading-overlay');
+}
+
+// // DOM elements
+// const noteList = document.getElementById('note-list');
+// const newNoteBtn = document.getElementById('new-note-btn');
+// const noteTitleInput = document.getElementById('note-title');
+// const noteContentInput = document.getElementById('note-content');
+// const toggleSortBtn = document.getElementById('toggle-sort-btn');
+// const sidebar = document.querySelector('.sidebar');
+// const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+// const openSidebarBtn = document.getElementById('open-sidebar-btn');
+// const darkOverlay = document.querySelector('.dark-overlay');
+// const searchInput = document.getElementById('search-input');
+// const searchClearBtn = document.getElementById('search-clear-btn');
+// const loginForm = document.getElementById('login-form');
+// const loginBtn = document.getElementById('login-btn');
+// const logoutBtn = document.getElementById('logout-btn');
+// const emailInput = document.getElementById('email-input');
+// const passwordInput = document.getElementById('password-input');
+// const userEmail = document.getElementById('user-email');
+// const userMenuBtn = document.getElementById('user-menu-btn');
+// const userDropdown = document.getElementById('user-dropdown');
+// const loadingOverlay = document.getElementById('loading-overlay');
 
 // Global variables
 let allNotes = [];
