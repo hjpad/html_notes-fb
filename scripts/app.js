@@ -1,12 +1,30 @@
 
-// Firebase initialization
-firebase.initializeApp(firebaseConfig);
-// Initialize App Check
-const appCheck = firebase.appCheck();
-appCheck.activate('YOUR_RECAPTCHA_SITE_KEY', true);
-// Initialise Firestore Database and Authentication
-const db = firebase.firestore();
-const auth = firebase.auth();
+// scrips/app.js
+
+let app;
+
+async function initializeFirebase() {
+  try {
+    const functions = firebase.functions();
+    const getFirebaseConfig = functions.httpsCallable('getFirebaseConfig');
+    const result = await getFirebaseConfig();
+    const firebaseConfig = result.data;
+
+    // Initialize Firebase
+    app = firebase.initializeApp(firebaseConfig);
+    
+    // Now you can initialize other Firebase services
+    db = firebase.firestore();
+    auth = firebase.auth();
+
+    // Call your initializeApp function or any other startup logic
+    initializeApp();
+  } catch (error) {
+    console.error("Error initializing Firebase:", error);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', initializeFirebase);
 
 // DOM elements
 const noteList = document.getElementById('note-list');
