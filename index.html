@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>html_notes</title>
+
+	<link rel="icon" type="image/x-icon" href="images/favicons/favicon.ico">
+	<link rel="icon" type="image/png" sizes="16x16" href="images/favicons/favicon-16x16.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="images/favicons/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="144x144" href="images/favicons/favicon-144x144.png">
+	<link rel="icon" type="image/png" sizes="192x192" href="images/favicons/android-chrome-192x192.png">
+	<link rel="icon" type="image/png" sizes="512x512" href="images/favicons/android-chrome-512x512.png">
+
+    <link rel="manifest" href="site.webmanifest">
+
+    <link rel="stylesheet" href="styles/styles.css">
+	<link rel="stylesheet" href="styles/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+	<script defer src="https://umami.hjpad.app/script.js" data-website-id="c4e17cd0-24a1-4eab-9f7f-27a59a6dae64"></script>
+</head>
+<body>
+	<div id="auth-container">
+        <div id="login-form" class="auth-form">
+            <h2>Welcome</h2>
+            <input type="email" id="email-input" placeholder="Email">
+            <input type="password" id="password-input" placeholder="Password">
+            <button id="login-btn" class="auth-btn">Login</button>
+            <!-- <button id="signup-btn" class="auth-btn secondary">Sign Up</button> -->
+        </div>
+    </div>
+    <div class="main-container">
+        <aside class="main-sidebar">
+			<div class="main-header">
+				<div class="header-group">
+					<button id="note-list-btn" class="icon-button" data-tooltip="Notes">
+						<i class="fas fa-folder"></i>
+					</button>
+					<button id="favourite-list-btn" class="icon-button" data-tooltip="Favourites">
+						<i class="fas fa-star"></i>
+					</button>
+				</div>
+				<button id="close-sidebar-btn" class="icon-button" data-tooltip="Close Sidebar">
+					<i class="fas fa-chevron-circle-left"></i>
+				</button>
+			</div>
+			<div class="main-search">
+			    <input type="text" id="search-input" placeholder="Search notes...">
+			    <button class="search-clear-btn" id="search-clear-btn">
+			        <i class="fas fa-times"></i>
+			    </button>
+			</div>
+			<div class="list-container">
+				<div class="list-header">
+					<button id="toggle-sort-btn" class="icon-button" data-tooltip="Toggle Sort Order">
+						<i class="fas fa-sort-alpha-down"></i>
+					</button>
+					<button id="new-note-btn" class="icon-button" data-tooltip="New Note">
+						<i class="fas fa-plus"></i>
+					</button>
+				</div>
+				<div class="list-body">
+					<ul id="note-list"></ul>
+				</div>
+			</div>
+		</aside>
+        <main class="main-content">
+            <div class="main-header">
+                <button id="open-sidebar-btn" class="icon-button" data-tooltip="Open Sidebar">
+                    <i class="fas fa-chevron-circle-right"></i>
+                </button>
+				<div class="user-menu">
+                    <button id="user-menu-btn" class="icon-button" data-tooltip="User Menu">
+                        <i class="fas fa-user-circle"></i>
+                    </button>
+                    <div id="user-dropdown" class="dropdown-content">
+                        <span id="user-email"></span>
+                        <button id="logout-btn">Logout</button>
+                    </div>
+                </div>
+            </div>
+			<div class="editor-container">
+				<input type="text" id="note-title" placeholder="Note Title">
+            	<textarea id="note-content" placeholder="Note Content"></textarea>
+			</div>
+        </main>
+    </div>
+
+	<div class="dark-overlay"></div>
+
+	<div id="loading-overlay" class="loading-overlay">
+		<div class="loading-spinner"></div>
+		<p>Loading...</p>
+	</div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+
+    
+    <script src="scripts/firebaseConfig.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app-check.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>
