@@ -1,5 +1,6 @@
+
 // Firebase initialization
-let db, auth;
+// let db, auth;
 
 function initializeFirebase() {
     if (typeof window.firebaseConfig !== 'undefined' && firebase) {
@@ -79,9 +80,7 @@ searchClearBtn.addEventListener('click', clearSearch);
 
 // Initialize the app
 function initializeApp() {
-    if (!initializeFirebase()) {
-        return;
-    }
+    initializeFirebase();
 
     auth.onAuthStateChanged((user) => {
         if (user) {
