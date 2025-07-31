@@ -13,22 +13,6 @@ function initializeFirebase() {
     }
 }
 
-// Main initialization function
-function initializeApp() {
-    if (!initializeFirebase()) {
-        return;
-    }
-
-    auth.onAuthStateChanged((user) => {
-        if (user) {
-            showUserInfo(user);
-            loadNotes();
-        } else {
-            showLoginForm();
-        }
-    });
-}
-
 // DOM elements
 const noteList = document.getElementById('note-list');
 const newNoteBtn = document.getElementById('new-note-btn');
@@ -95,6 +79,10 @@ searchClearBtn.addEventListener('click', clearSearch);
 
 // Initialize the app
 function initializeApp() {
+    if (!initializeFirebase()) {
+        return;
+    }
+
     auth.onAuthStateChanged((user) => {
         if (user) {
             showUserInfo(user);
@@ -103,8 +91,6 @@ function initializeApp() {
             showLoginForm();
         }
     });
-    noteTitleInput.addEventListener('input', debouncedSave);
-    noteContentInput.addEventListener('input', debouncedSave);
 }
 
 // Authentication functions
